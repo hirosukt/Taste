@@ -19,7 +19,7 @@ class Taste : JavaPlugin(), Listener {
 
     @EventHandler
     fun onJoin(event: PlayerJoinEvent) {
-        val loc = Location(event.player.world, 0.0, 5.0, 0.0, 0f, 0f)
+        val loc = Location(event.player.world, 0.5, 5.0, 0.5, 0f, 0f)
         val player = event.player
         player.teleport(loc)
         player.bedSpawnLocation = loc
