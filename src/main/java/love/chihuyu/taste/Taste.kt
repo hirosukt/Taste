@@ -4,6 +4,7 @@ import org.bukkit.Location
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.server.ServerListPingEvent
 import org.bukkit.plugin.java.JavaPlugin
 
 class Taste : JavaPlugin(), Listener {
@@ -24,5 +25,11 @@ class Taste : JavaPlugin(), Listener {
         player.bedSpawnLocation = loc
         player.health = 20.0
         player.foodLevel = 20
+    }
+
+    @EventHandler
+    fun onPing(event: ServerListPingEvent) {
+        event.maxPlayers = 0
+        event.motd = "          §c§l§nHiro's Hack Tasting§7 ❘ §6§l§n1.12.2\n§r                 §9§lNoCheat§c§lPlus§7, §6§lAAC"
     }
 }
