@@ -1,0 +1,7 @@
+name: Taste
+version: '${version}'
+main: love.chihuyu.taste.Taste
+prefix: Taste
+authors: [ Hirosuke ]
+description: Original hack tasting plugin for chihuyu.love
+website: hirosuke.works
