@@ -4,6 +4,7 @@ import org.bukkit.Location
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerRespawnEvent
 import org.bukkit.event.server.ServerListPingEvent
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -22,9 +23,15 @@ class Taste : JavaPlugin(), Listener {
         val loc = Location(event.player.world, 0.5, 5.0, 0.5, 0f, 0f)
         val player = event.player
         player.teleport(loc)
-        player.bedSpawnLocation = loc
         player.health = 20.0
         player.foodLevel = 20
+    }
+
+    @EventHandler
+    fun onRespawn(event: PlayerRespawnEvent) {
+        val loc = Location(event.player.world, 0.5, 5.0, 0.5, 0f, 0f)
+        val player = event.player
+        player.teleport(loc)
     }
 
     @EventHandler
