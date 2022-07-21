@@ -5,3 +5,18 @@ prefix: Taste
 authors: [ Hirosuke ]
 description: Original hack tasting plugin for chihuyu.love
 website: hirosuke.works
+commands:
+  ac:
+    permission: taste.cmd.ac
+  hunger:
+    permission: taste.cmd.hunger
+permissions:
+  taste.cmd.*:
+    default: op
+    children:
+      taste.cmd.ac: true
+      taste.cmd.hunger: true
+  taste.cmd.ac:
+    default: true
+  taste.cmd.hunger:
+    default: true

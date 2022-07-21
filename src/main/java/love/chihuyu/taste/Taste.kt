@@ -1,17 +1,41 @@
 package love.chihuyu.taste
 
+import love.chihuyu.taste.command.CommandAC
+import love.chihuyu.taste.command.CommandHunger
+import love.chihuyu.taste.util.HungerUtil
+import love.chihuyu.taste.util.ScoreboardUtil
+import net.luckperms.api.LuckPerms
+import net.luckperms.api.node.Node
+import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.Material
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.entity.FoodLevelChangeEvent
+import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerRespawnEvent
 import org.bukkit.event.server.ServerListPingEvent
 import org.bukkit.plugin.java.JavaPlugin
+import org.bukkit.scoreboard.Team
+
 
 class Taste : JavaPlugin(), Listener {
+
+    companion object {
+        lateinit var plugin: JavaPlugin
+    }
+
+    init {
+        plugin = this
+    }
+
     override fun onEnable() {
         // Plugin startup logic
         this.server.pluginManager.registerEvents(this, this)
+        CommandAC.register()
+        CommandHunger.register()
     }
 
     override fun onDisable() {
@@ -25,6 +49,8 @@ class Taste : JavaPlugin(), Listener {
         player.teleport(loc)
         player.health = 20.0
         player.foodLevel = 20
+
+        ScoreboardUtil.update(player)
     }
 
     @EventHandler
@@ -37,6 +63,59 @@ class Taste : JavaPlugin(), Listener {
     @EventHandler
     fun onPing(event: ServerListPingEvent) {
         event.maxPlayers = 0
-        event.motd = "          §c§l§nHiro's Hack Tasting§7 ❘ §6§l§n1.12.2\n§r                 §9§lNoCheat§c§lPlus§7, §6§lAAC"
+        event.motd =
+            "          §c§l§nHiro's Hack Tasting§7 ❘ §6§l§n1.12.2\n§r                 §9§lNoCheat§c§lPlus§7, §6§lAAC"
+    }
+
+    @EventHandler()
+    fun onClickInventory(event: InventoryClickEvent) {
+        val item = event.currentItem
+        val player = event.whoClicked as Player
+        if (event.clickedInventory?.title != "Select Anti Cheat" || item == null) return
+        val provider = Bukkit.getServicesManager().getRegistration(LuckPerms::class.java) ?: return
+        val api = provider.provider
+
+        fun switchACNode(antiCheats: AntiCheats) {
+            fun registerNodeTeam(): Team {
+                return player.scoreboard.registerNewTeam(when (antiCheats) {
+                    AntiCheats.VANILLA -> "vanilla"
+                    AntiCheats.NCP -> "ncp"
+                }).apply {
+                    this.prefix = when (antiCheats) {
+                        AntiCheats.VANILLA -> "§7[§aVNL§7]§f "
+                        AntiCheats.NCP -> "§7[§9NC§cP§7]§f "
+                    }
+                }
+            }
+
+            api.userManager.modifyUser(player.uniqueId) {
+                when (antiCheats) {
+                    AntiCheats.VANILLA -> {
+                        (player.scoreboard.getTeam("vanilla") ?: registerNodeTeam()).addEntry(player.name)
+                        it.data().add(Node.builder("nocheatplus.shortcut.bypass").build())
+                    }
+                    AntiCheats.NCP -> {
+                        (player.scoreboard.getTeam("ncp") ?: registerNodeTeam()).addEntry(player.name)
+                        it.data().remove(Node.builder("nocheatplus.shortcut.bypass").build())
+                    }
+                }
+            }
+
+            ScoreboardUtil.update(player)
+        }
+
+        when (item.type) {
+            Material.GRASS -> switchACNode(AntiCheats.VANILLA)
+            Material.QUARTZ -> switchACNode(AntiCheats.NCP)
+            else -> {}
+        }
+
+        event.isCancelled = true
+    }
+
+    @EventHandler
+    fun onFood(event: FoodLevelChangeEvent) {
+        val player = event.entity as Player
+        event.isCancelled = HungerUtil.isAntiHunger(player)
     }
 }

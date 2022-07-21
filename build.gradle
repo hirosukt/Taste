@@ -16,14 +16,6 @@ repositories {
         name = 'sonatype'
         url = 'https://oss.sonatype.org/content/groups/public/'
     }
-    maven {
-        name = 'md_5-snapshots'
-        url = 'https://repo.md-5.net/content/repositories/snapshots/'
-    }
-    maven {
-        name = 'md_5-release'
-        url = 'https://repo.md-5.net/content/repositories/releases/'
-    }
 }
 
 configurations {
@@ -32,7 +24,7 @@ configurations {
 
 dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
-    compileOnly 'fr.neatmonster:nocheatplus:3.16.1-SNAPSHOT'
+    compileOnly 'net.luckperms:api:5.4'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     ktlint 'com.github.shyiko:ktlint:0.31.0'
 }
