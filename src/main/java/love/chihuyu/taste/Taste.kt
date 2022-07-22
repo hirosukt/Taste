@@ -75,6 +75,8 @@ class Taste : JavaPlugin(), Listener {
         val provider = Bukkit.getServicesManager().getRegistration(LuckPerms::class.java) ?: return
         val api = provider.provider
 
+        event.isCancelled = true
+
         fun switchACNode(antiCheats: AntiCheats) {
             fun registerNodeTeam(): Team {
                 return player.scoreboard.registerNewTeam(when (antiCheats) {
@@ -100,22 +102,19 @@ class Taste : JavaPlugin(), Listener {
                     }
                 }
             }
-
-            ScoreboardUtil.update(player)
         }
 
         when (item.type) {
             Material.GRASS -> switchACNode(AntiCheats.VANILLA)
             Material.QUARTZ -> switchACNode(AntiCheats.NCP)
             else -> {}
-        }
-
-        event.isCancelled = true
+        }.also { ScoreboardUtil.update(player) }
     }
 
     @EventHandler
     fun onFood(event: FoodLevelChangeEvent) {
         val player = event.entity as Player
         event.isCancelled = HungerUtil.isAntiHunger(player)
+        if (HungerUtil.isAntiHunger(player)) event.foodLevel = 20
     }
 }
