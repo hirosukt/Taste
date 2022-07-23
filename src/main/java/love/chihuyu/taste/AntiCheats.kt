@@ -1,6 +1,6 @@
 package love.chihuyu.taste
 
-enum class AntiCheats {
-    VANILLA,
-    NCP
+enum class AntiCheats(val teamName: String) {
+    VANILLA("vanilla"),
+    NCP("ncp")
 }

@@ -46,9 +46,16 @@ class Taste : JavaPlugin(), Listener {
     fun onJoin(event: PlayerJoinEvent) {
         val loc = Location(event.player.world, 0.5, 5.0, 0.5, 0f, 0f)
         val player = event.player
+        val provider = Bukkit.getServicesManager().getRegistration(LuckPerms::class.java) ?: return
+        val api = provider.provider
         player.teleport(loc)
         player.health = 20.0
         player.foodLevel = 20
+
+        api.userManager.modifyUser(player.uniqueId) {
+            ScoreboardUtil.prepareNodeTeams(player.scoreboard)
+            it.data().add(Node.builder("nocheatplus.shortcut.bypass").build())
+        }
 
         ScoreboardUtil.update(player)
     }
@@ -78,28 +85,11 @@ class Taste : JavaPlugin(), Listener {
         event.isCancelled = true
 
         fun switchACNode(antiCheats: AntiCheats) {
-            fun registerNodeTeam(): Team {
-                return player.scoreboard.registerNewTeam(when (antiCheats) {
-                    AntiCheats.VANILLA -> "vanilla"
-                    AntiCheats.NCP -> "ncp"
-                }).apply {
-                    this.prefix = when (antiCheats) {
-                        AntiCheats.VANILLA -> "§7[§aVNL§7]§f "
-                        AntiCheats.NCP -> "§7[§9NC§cP§7]§f "
-                    }
-                }
-            }
-
+            player.scoreboard.getTeam(antiCheats.teamName).addEntry(player.name)
             api.userManager.modifyUser(player.uniqueId) {
                 when (antiCheats) {
-                    AntiCheats.VANILLA -> {
-                        (player.scoreboard.getTeam("vanilla") ?: registerNodeTeam()).addEntry(player.name)
-                        it.data().add(Node.builder("nocheatplus.shortcut.bypass").build())
-                    }
-                    AntiCheats.NCP -> {
-                        (player.scoreboard.getTeam("ncp") ?: registerNodeTeam()).addEntry(player.name)
-                        it.data().remove(Node.builder("nocheatplus.shortcut.bypass").build())
-                    }
+                    AntiCheats.VANILLA -> it.data().add(Node.builder("nocheatplus.shortcut.bypass").build())
+                    AntiCheats.NCP -> it.data().remove(Node.builder("nocheatplus.shortcut.bypass").build())
                 }
             }
         }
@@ -108,7 +98,10 @@ class Taste : JavaPlugin(), Listener {
             Material.GRASS -> switchACNode(AntiCheats.VANILLA)
             Material.QUARTZ -> switchACNode(AntiCheats.NCP)
             else -> {}
-        }.also { ScoreboardUtil.update(player) }
+        }.also {
+            ScoreboardUtil.update(player)
+            ScoreboardUtil.applyTeamDisplayToOther(player)
+        }
     }
 
     @EventHandler
