@@ -18,7 +18,7 @@ object ScoreboardUtil {
         obj.displayName = "   §c§lHiro Tasting§r   "
         prepareNodeTeams(scoreboard)
         listOf(
-            "AC: ${player.scoreboard.getEntryTeam(player.name).prefix.replace("[", "").replace("]", "")}",
+            "AC: ${player.scoreboard.getEntryTeam(player.name) ?: player.scoreboard.getTeam("vanilla").also { it.addEntry(player.name) }.prefix.replace("[", "").replace("]", "")}",
             "",
             "Hunger: ${if (HungerUtil.isAntiHunger(player)) "§cfalse" else "§atrue"}"
         ).forEachIndexed { index, s ->

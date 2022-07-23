@@ -18,8 +18,6 @@ import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerRespawnEvent
 import org.bukkit.event.server.ServerListPingEvent
 import org.bukkit.plugin.java.JavaPlugin
-import org.bukkit.scoreboard.Team
-
 
 class Taste : JavaPlugin(), Listener {
 
