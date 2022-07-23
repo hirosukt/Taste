@@ -19,7 +19,7 @@ object ScoreboardUtil {
         obj.displayName = "   §c§lHiro Tasting§r   "
         prepareNodeTeams(scoreboard)
         listOf(
-            "AC: ${(player.scoreboard.getEntryTeam(player.name) ?: player.scoreboard.getTeam("vanilla").also { it.addEntry(player.name) }).prefix.replace("[", "").replace("]", "")}",
+            "AC: ${AntiCheats.values().first { antiCheats -> antiCheats.teamName == (player.scoreboard.getEntryTeam(player.name) ?: player.scoreboard.getTeam("vanilla").also { it.addEntry(player.name) }).name }.acName}",
             "",
             "${if (isHunger) "§a" else "§c"}Hunger: $isHunger"
         ).forEachIndexed { index, s ->
@@ -38,15 +38,10 @@ object ScoreboardUtil {
     }
 
     private fun registerNodeTeam(scoreboard: Scoreboard, antiCheats: AntiCheats): Team {
-        return scoreboard.registerNewTeam(antiCheats.teamName).apply {
-            this.prefix = when (antiCheats) {
-                AntiCheats.VANILLA -> "§7[§aVNL§7]§f "
-                AntiCheats.NCP -> "§7[§9NC§cP§7]§f "
-            }
-        }
+        return scoreboard.registerNewTeam(antiCheats.teamName).apply { this.prefix = "§7[${antiCheats.prefix}§7]§f "}
     }
 
-    fun prepareNodeTeams(scoreboard: Scoreboard) {
+    private fun prepareNodeTeams(scoreboard: Scoreboard) {
         AntiCheats.values().forEach { ac -> registerNodeTeam(scoreboard, ac) }
     }
 

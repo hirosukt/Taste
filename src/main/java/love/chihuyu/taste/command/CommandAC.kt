@@ -23,6 +23,18 @@ object CommandAC : Command("ac") {
                 "Version: 3.16.0-RC-sMD5NET-b1134"
             )
         } })
+        guiSelectAC.setItem(14, ItemStack(Material.BLAZE_POWDER).apply { this.itemMeta = this.itemMeta.apply {
+            this.displayName = "§4§lVulcan"
+            this.lore = listOf(
+                "Version: 2.6.7-HOTFIX"
+            )
+        } })
+        guiSelectAC.setItem(16, ItemStack(Material.ENDER_CHEST).apply { this.itemMeta = this.itemMeta.apply {
+            this.displayName = "§b§lMatrix"
+            this.lore = listOf(
+                "Version: 6.7.1"
+            )
+        } })
         sender.openInventory(guiSelectAC)
     }
 

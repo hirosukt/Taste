@@ -53,6 +53,8 @@ class Taste : JavaPlugin(), Listener {
         api.userManager.modifyUser(player.uniqueId) {
             ScoreboardUtil.fixNodeTeams(player.scoreboard)
             it.data().add(Node.builder("nocheatplus.shortcut.bypass").build())
+            it.data().add(Node.builder("vulcan.bypass.*").build())
+            it.data().add(Node.builder("matrix.bypass").build())
         }
 
         ScoreboardUtil.update(player)
@@ -64,13 +66,6 @@ class Taste : JavaPlugin(), Listener {
         val loc = Location(event.player.world, 0.5, 5.0, 0.5, 0f, 0f)
         val player = event.player
         player.teleport(loc)
-    }
-
-    @EventHandler
-    fun onPing(event: ServerListPingEvent) {
-        event.maxPlayers = 0
-        event.motd =
-            "          §c§l§nHiro's Hack Tasting§7 ❘ §6§l§n1.12.2\n§r                 §9§lNoCheat§c§lPlus§7, §6§lAAC"
     }
 
     @EventHandler()
@@ -87,8 +82,26 @@ class Taste : JavaPlugin(), Listener {
             player.scoreboard.getTeam(antiCheats.teamName).addEntry(player.name)
             api.userManager.modifyUser(player.uniqueId) {
                 when (antiCheats) {
-                    AntiCheats.VANILLA -> it.data().add(Node.builder("nocheatplus.shortcut.bypass").build())
-                    AntiCheats.NCP -> it.data().remove(Node.builder("nocheatplus.shortcut.bypass").build())
+                    AntiCheats.VANILLA -> {
+                        it.data().add(Node.builder("nocheatplus.shortcut.bypass").build())
+                        it.data().add(Node.builder("vulcan.bypass.*").build())
+                        it.data().add(Node.builder("matrix.bypass").build())
+                    }
+                    AntiCheats.NCP -> {
+                        it.data().add(Node.builder("vulcan.bypass.*").build())
+                        it.data().add(Node.builder("matrix.bypass").build())
+                        it.data().remove(Node.builder("nocheatplus.shortcut.bypass").build())
+                    }
+                    AntiCheats.VULCAN -> {
+                        it.data().add(Node.builder("nocheatplus.shortcut.bypass").build())
+                        it.data().add(Node.builder("matrix.bypass").build())
+                        it.data().remove(Node.builder("vulcan.bypass.*").build())
+                    }
+                    AntiCheats.MATRIX -> {
+                        it.data().add(Node.builder("nocheatplus.shortcut.bypass").build())
+                        it.data().add(Node.builder("vulcan.bypass.*").build())
+                        it.data().remove(Node.builder("matrix.bypass").build())
+                    }
                 }
             }
         }
@@ -96,6 +109,8 @@ class Taste : JavaPlugin(), Listener {
         when (item.type) {
             Material.GRASS -> switchACNode(AntiCheats.VANILLA)
             Material.QUARTZ -> switchACNode(AntiCheats.NCP)
+            Material.BLAZE_POWDER -> switchACNode(AntiCheats.VULCAN)
+            Material.ENDER_CHEST -> switchACNode(AntiCheats.MATRIX)
             else -> {}
         }.also {
             ScoreboardUtil.update(player)
