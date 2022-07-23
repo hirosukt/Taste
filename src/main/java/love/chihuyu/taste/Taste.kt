@@ -51,11 +51,12 @@ class Taste : JavaPlugin(), Listener {
         player.foodLevel = 20
 
         api.userManager.modifyUser(player.uniqueId) {
-            ScoreboardUtil.prepareNodeTeams(player.scoreboard)
+            ScoreboardUtil.fixNodeTeams(player.scoreboard)
             it.data().add(Node.builder("nocheatplus.shortcut.bypass").build())
         }
 
         ScoreboardUtil.update(player)
+        ScoreboardUtil.applyTeamDisplayToOther(player)
     }
 
     @EventHandler
@@ -99,6 +100,7 @@ class Taste : JavaPlugin(), Listener {
         }.also {
             ScoreboardUtil.update(player)
             ScoreboardUtil.applyTeamDisplayToOther(player)
+            player.closeInventory()
         }
     }
 

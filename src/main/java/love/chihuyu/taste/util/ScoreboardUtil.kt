@@ -14,13 +14,14 @@ object ScoreboardUtil {
         val objString = player.uniqueId.toString().split('-')[0]
         try { scoreboard.getObjective(objString).unregister() } catch (_: Exception) { }
         val obj = scoreboard.registerNewObjective(objString, "")
+        val isHunger = !HungerUtil.isAntiHunger(player)
         obj.displaySlot = DisplaySlot.SIDEBAR
         obj.displayName = "   §c§lHiro Tasting§r   "
         prepareNodeTeams(scoreboard)
         listOf(
-            "AC: ${player.scoreboard.getEntryTeam(player.name) ?: player.scoreboard.getTeam("vanilla").also { it.addEntry(player.name) }.prefix.replace("[", "").replace("]", "")}",
+            "AC: ${(player.scoreboard.getEntryTeam(player.name) ?: player.scoreboard.getTeam("vanilla").also { it.addEntry(player.name) }).prefix.replace("[", "").replace("]", "")}",
             "",
-            "Hunger: ${if (HungerUtil.isAntiHunger(player)) "§cfalse" else "§atrue"}"
+            "${if (isHunger) "§a" else "§c"}Hunger: $isHunger"
         ).forEachIndexed { index, s ->
             obj.getScore(s).score = -index
         }
@@ -49,7 +50,7 @@ object ScoreboardUtil {
         AntiCheats.values().forEach { ac -> registerNodeTeam(scoreboard, ac) }
     }
 
-    private fun fixNodeTeams(scoreboard: Scoreboard) {
+    fun fixNodeTeams(scoreboard: Scoreboard) {
         AntiCheats.values().forEach { ac -> scoreboard.getTeam(ac.teamName) ?: registerNodeTeam(scoreboard, ac) }
     }
 }
