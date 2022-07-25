@@ -57,6 +57,7 @@ class Taste : JavaPlugin(), Listener {
             it.data().add(Node.builder("matrix.bypass").build())
         }
 
+        player.scoreboard.getTeam("vanilla").addEntry(player.name)
         ScoreboardUtil.update(player)
         ScoreboardUtil.applyTeamDisplayToOther(player)
     }
