@@ -89,14 +89,14 @@ class Taste : JavaPlugin(), Listener {
                         it.data().add(Node.builder("matrix.bypass").build())
                     }
                     AntiCheats.NCP -> {
+                        it.data().remove(Node.builder("nocheatplus.shortcut.bypass").build())
                         it.data().add(Node.builder("vulcan.bypass.*").build())
                         it.data().add(Node.builder("matrix.bypass").build())
-                        it.data().remove(Node.builder("nocheatplus.shortcut.bypass").build())
                     }
                     AntiCheats.VULCAN -> {
                         it.data().add(Node.builder("nocheatplus.shortcut.bypass").build())
-                        it.data().add(Node.builder("matrix.bypass").build())
                         it.data().remove(Node.builder("vulcan.bypass.*").build())
+                        it.data().add(Node.builder("matrix.bypass").build())
                     }
                     AntiCheats.MATRIX -> {
                         it.data().add(Node.builder("nocheatplus.shortcut.bypass").build())
