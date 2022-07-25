@@ -122,7 +122,7 @@ class Taste : JavaPlugin(), Listener {
             ScoreboardUtil.update(player)
             ScoreboardUtil.applyTeamDisplayToOther(player)
             player.closeInventory()
-            player.playSound(player.location, Sound.ENTITY_PLAYER_BURP, 1f, 1f)
+            player.playSound(player.location, Sound.UI_BUTTON_CLICK, 1f, 1f)
         }
     }
 

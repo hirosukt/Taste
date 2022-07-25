@@ -37,7 +37,7 @@ object CommandAC : Command("ac") {
             )
         } })
         sender.openInventory(guiSelectAC)
-        sender.playSound(sender.location, Sound.ENTITY_PLAYER_BURP, 1f, 1f)
+        sender.playSound(sender.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f)
     }
 
     override fun onTabComplete(sender: CommandSender, alias: String, args: Array<out String>): List<String>? {
