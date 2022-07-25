@@ -9,6 +9,7 @@ import net.luckperms.api.node.Node
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -79,7 +80,7 @@ class Taste : JavaPlugin(), Listener {
 
         event.isCancelled = true
 
-        fun switchACNode(antiCheats: AntiCheats) {
+        fun switchACNode(antiCheats: AntiCheats): Boolean {
             player.scoreboard.getTeam(antiCheats.teamName).addEntry(player.name)
             api.userManager.modifyUser(player.uniqueId) {
                 when (antiCheats) {
@@ -105,18 +106,23 @@ class Taste : JavaPlugin(), Listener {
                     }
                 }
             }
+
+            return true
         }
 
-        when (item.type) {
+        val successed = when (item.type) {
             Material.GRASS -> switchACNode(AntiCheats.VANILLA)
             Material.QUARTZ -> switchACNode(AntiCheats.NCP)
             Material.BLAZE_POWDER -> switchACNode(AntiCheats.VULCAN)
             Material.ENDER_CHEST -> switchACNode(AntiCheats.MATRIX)
-            else -> {}
-        }.also {
+            else -> false
+        }
+
+        if (successed) {
             ScoreboardUtil.update(player)
             ScoreboardUtil.applyTeamDisplayToOther(player)
             player.closeInventory()
+            player.playSound(player.location, Sound.ENTITY_PLAYER_BURP, 1f, 1f)
         }
     }
 

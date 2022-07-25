@@ -3,6 +3,7 @@ package love.chihuyu.taste.command
 import love.chihuyu.taste.Taste.Companion.plugin
 import org.bukkit.Bukkit
 import org.bukkit.Material
+import org.bukkit.Sound
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -36,6 +37,7 @@ object CommandAC : Command("ac") {
             )
         } })
         sender.openInventory(guiSelectAC)
+        sender.playSound(sender.location, Sound.ENTITY_PLAYER_BURP, 1f, 1f)
     }
 
     override fun onTabComplete(sender: CommandSender, alias: String, args: Array<out String>): List<String>? {
