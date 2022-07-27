@@ -23,7 +23,7 @@ configurations {
 }
 
 dependencies {
-    compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
+    compileOnly 'org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT'
     compileOnly 'net.luckperms:api:5.4'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     ktlint 'com.github.shyiko:ktlint:0.31.0'
